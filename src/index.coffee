@@ -48,7 +48,7 @@ class ExoidRouter
       try
         @assert requests, Joi.array().items Joi.object().keys
           path: Joi.string()
-          body: Joi.any()
+          body: Joi.any().optional()
       catch error
         return res.status(400).json
           status: error.status
