@@ -61,8 +61,7 @@ class ExoidRouter
           unless handler
             @throw {status: 400, info: 'Handler not found'}
 
-          resolve @state.paths[request.path] {
-            body: request.body
+          resolve @state.paths[request.path] request.body, {
             cache: (id, resource) ->
               if _.isPlainObject id
                 resource = id
