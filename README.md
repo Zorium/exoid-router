@@ -14,7 +14,7 @@ authed = (handler) ->
 
   (body, req, rest...) ->
     unless req.user?
-      router.throw status: 401, detail: 'Unauthorized'
+      router.throw status: 401, info: 'Unauthorized'
 
     handler body, req, rest...
 
