@@ -31,4 +31,8 @@ routes = router
 
 # As Express Middleware
 app.post '/exoid', routes.asMiddleware()
+
+# Resolve (v0.2.4+)
+routes.resolve path, body, req)
+.then ({result, error, cache}) -> null
 ```

@@ -39,6 +39,32 @@ class ExoidRouter
         paths: {"#{path}": handler}
       }, state
 
+  resolve: (path, body, req) =>
+    cache = []
+    return new Promise (resolve) =>
+      handler = @state.paths[path]
+
+      unless handler
+        @throw {status: 400, info: "Handler not found for path: #{path}"}
+
+      resolve @state.paths[path] body, _.defaults {
+        cache: (id, resource) ->
+          if _.isPlainObject id
+            resource = id
+            id = id.id
+          cache.push {path: id, result: resource}
+      }, req
+    .then (result) ->
+      {result, cache, error: null}
+    .catch (error) ->
+      log.error error
+      errObj = if error._exoid
+        {status: error.status, info: error.info}
+      else
+        {status: 500}
+
+      {result: null, error: errObj, cache: cache}
+
   asMiddleware: =>
     (req, res, next) =>
       requests = req.body?.requests
@@ -54,39 +80,15 @@ class ExoidRouter
           status: error.status
           info: error.info
 
-      Promise.settle _.map requests, (request) =>
-        return new Promise (resolve) =>
-          handler = @state.paths[request.path]
-
-          unless handler
-            @throw {status: 400, info: 'Handler not found'}
-
-          resolve @state.paths[request.path] request.body, _.defaults {
-            cache: (id, resource) ->
-              if _.isPlainObject id
-                resource = id
-                id = id.id
-              cache.push {path: id, result: resource}
-          }, req
+      Promise.all _.map requests, (request) =>
+        @resolve request.path, request.body, req
       .then (settled) ->
         {
-          results: _.map settled, (result) ->
-            unless result.isFulfilled()
-              return null
-            result.value()
-
-          errors: _.map settled, (result) ->
-            unless result.isRejected()
-              return null
-
-            error = result.reason()
-            log.error error
-            if error._exoid
-              {status: error.status, info: error.info}
-            else
-              {status: 500}
-
-          cache: cache
+          results: _.map settled, ({result}) -> result
+          errors: _.map settled, ({error}) -> error
+          cache: _.reduce settled, (cache, result) ->
+            cache.concat result.cache
+          , []
         }
       .then (response) -> res.json response
       .catch next
