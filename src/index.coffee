@@ -57,10 +57,10 @@ class ExoidRouter
     .then (result) ->
       {result, cache, error: null}
     .catch (error) ->
-      log.error error
       errObj = if error._exoid
         {status: error.status, info: error.info}
       else
+        log.error error
         {status: 500}
 
       {result: null, error: errObj, cache: cache}
