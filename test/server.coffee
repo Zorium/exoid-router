@@ -75,7 +75,7 @@ describe 'exoid-router', ->
       json: (res) ->
         b res, {
           results: [null]
-          errors: [{message: 'xxx'}]
+          errors: [{status: 400, message: 'xxx'}]
           cache: []
         }
         called += 1

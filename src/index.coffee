@@ -5,6 +5,7 @@ thrower = (data) ->
   if _.isString data
     data = {message: data}
 
+  data.status ?= 400
   error = new Error data.message
   Error.captureStackTrace error, thrower
   error._exoid = true
