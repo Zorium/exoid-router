@@ -1,7 +1,7 @@
 {
   "name": "exoid-router",
-  "version": "0.2.6",
-  "description": "Scaffolding for isomorphic coffeescript libraries",
+  "version": "0.2.5",
+  "description": "Router for Exoid protocol",
   "keywords": [
     "isomorphic",
     "scaffolding",
@@ -13,49 +13,21 @@
   "main": "src/index.coffee",
   "scripts": {
     "test": "node_modules/gulp/bin/gulp.js test",
-    "watch": "node_modules/gulp/bin/gulp.js watch",
-    "watch-phantom": "node_modules/gulp/bin/gulp.js watch:phantom",
+    "watch": "LINT=0 node_modules/gulp/bin/gulp.js watch",
     "preversion": "npm test"
   },
   "license": "MIT",
   "author": "Zolmeister (https://zolmeister.com/)",
   "dependencies": {
-    "bluebird": "^2.10.1",
+    "b-assert": "^0.1.2",
     "coffee-script": "^1.9.3",
     "joi": "^6.7.1",
-    "lodash": "^3.10.0",
-    "loga": "^0.1.1"
+    "lodash": "^3.10.0"
   },
   "devDependencies": {
-    "b-assert": "^0.1.2",
-    "clay-coffeescript-style-guide": "^1.1.0",
-    "coffee-loader": "^0.7.2",
-    "gulp": "^3.9.0",
-    "gulp-coffee-istanbul": "^0.7.1",
+    "gulp": "^3.9.1",
     "gulp-coffeelint": "^0.5.0",
     "gulp-mocha": "^2.1.3",
-    "gulp-rename": "^1.2.2",
-    "istanbul": "^0.4.5",
-    "json-loader": "^0.5.2",
-    "karma": "^0.13.3",
-    "karma-chrome-launcher": "^0.2.0",
-    "karma-firefox-launcher": "^0.1.6",
-    "karma-mocha": "^0.2.0",
-    "karma-phantomjs-launcher": "^0.2.0",
-    "mocha": "^2.2.5",
-    "phantomjs": "^1.9.17",
-    "traceur": "0.0.111",
-    "webpack-stream": "^2.0.0"
-  },
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Zorium/isomorphic-seed.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Zorium/isomorphic-seed/issues"
-  },
-  "homepage": "https://github.com/Zorium/isomorphic-seed"
+    "zorium-coffeelint-config": "^1.0.0"
+  }
 }

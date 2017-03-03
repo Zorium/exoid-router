@@ -1,17 +1,14 @@
 _ = require 'lodash'
-log = require 'loga'
 Joi = require 'joi'
-Promise = require 'bluebird'
 
-thrower = ({status, info}) ->
-  status ?= 400
+thrower = (data) ->
+  if _.isString data
+    data = {message: data}
 
-  error = new Error info
+  error = new Error data.message
   Error.captureStackTrace error, thrower
-
-  error.status = status
   error._exoid = true
-
+  error._exoid_data = data
   throw error
 
 assert = (obj, schema) ->
@@ -19,13 +16,13 @@ assert = (obj, schema) ->
 
   if valid.error
     try
-      thrower info: valid.error.message
+      thrower message: valid.error.message
     catch error
       Error.captureStackTrace error, assert
       throw error
 
 class ExoidRouter
-  constructor: (@state = {}) -> null
+  constructor: (@state = {paths: {}}) -> null
 
   throw: thrower
   assert: assert
@@ -57,13 +54,9 @@ class ExoidRouter
     .then (result) ->
       {result, cache, error: null}
     .catch (error) ->
-      errObj = if error._exoid
-        {status: error.status, info: error.info}
-      else
-        log.error error
-        {status: 500}
-
-      {result: null, error: errObj, cache: cache}
+      unless error._exoid
+        throw error # HTTP 500
+      {result: null, error: error._exoid_data, cache: cache}
 
   asMiddleware: =>
     (req, res, next) =>
