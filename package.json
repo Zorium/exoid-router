@@ -21,7 +21,7 @@
   "dependencies": {
     "b-assert": "^0.1.2",
     "coffee-script": "^1.9.3",
-    "joi": "^6.7.1",
+    "joi": "^10.4.2",
     "lodash": "^3.10.0"
   },
   "devDependencies": {
